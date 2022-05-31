@@ -24,15 +24,17 @@
 			<td>Price (euro)</td>
 			<td>Update</td>
 		</tr>
-		<?php
-		while($row = $result->fetch_array()) {		
-			echo "<tr>";
-			echo "<td>".$row['name']."</td>";
-			echo "<td>".$row['qty']."</td>";
-			echo "<td>".$row['price']."</td>";	
-			echo "<td><a href=\"edit.php?id=$row[id]\">Edit</a> | <a href=\"delete.php?id=$row[id]\" onClick=\"return confirm('Are you sure you want to delete?')\">Delete</a></td>";
-		}
-		?>
+		<?php foreach($products as $product): ?>
+        <tr>
+			<td><?php echo $product['name']; ?></td>
+            <td><?php echo $product['qty']; ?></td>
+            <td><?php echo $product['price']; ?></td>
+            <td><?php echo $product['name']; ?></td>
+            <td><a href="edit.php?id=<?php echo $product ['id'];?>">Edit</a> |
+            <a href="delete.php?id=<?php echo $product ['id'];?>"
+            onClick="return confirm('Are you sure you want to delete?')">Delete</a></td>"
+        </tr>
+		<?php endforeach: ?>
 	</table>	
 </body>
 </html>
