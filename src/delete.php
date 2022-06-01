@@ -10,8 +10,9 @@ if(!isset($_SESSION['logged'])) {
 //including the database connection file
 include("config.php");
 
-//getting id of the data from url
-$id = $_GET['id'];
+//getting id of the data from url y sanearlo
+
+$id = $mysqli->real_escape_string ($_GET['id']);
 
 //deleting the row from table
 $result=$mysqli->query("DELETE FROM products WHERE id=$id");

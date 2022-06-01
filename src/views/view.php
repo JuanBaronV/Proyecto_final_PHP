@@ -31,7 +31,7 @@
             <td><?php echo $product['price']; ?></td>
             <td><a href="edit.php?id=<?php echo $product ['id'];?>" class="btn btn-primary">Edit</a> |
             <a href="delete.php?id=<?php echo $product ['id'];?>" class="btn btn-primary"
-            onClick="return confirm('Are you sure you want to delete?')">Delete</a></td>"
+            onClick="return confirm('Are you sure you want to delete?')">Delete</a></td>
         </tr>
 		<?php endforeach; ?>
 	</table>	

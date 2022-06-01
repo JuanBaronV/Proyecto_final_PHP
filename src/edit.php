@@ -6,16 +6,16 @@ if(!isset($_SESSION['logged'])) {
 	header('Location: login.php');
 }
 
-
+include_once("views/header.php");
 // including the database connection file
 include_once("config.php");
 
-if(isset($_POST['id']) && isset($_POST['name']) && isset($_POST['qty']) && isset($_POST['price']))
+if(!empty($_POST))
 {	
-	$id = $_POST['id'];
-	$name = $_POST['name'];
-	$qty = $_POST['qty'];
-	$price = $_POST['price'];	
+	$id = $mysqli->real_escape_string($_POST['id']);
+	$name = $mysqli->real_escape_string($_POST['name']);
+	$qty = $mysqli->real_escape_string($_POST['qty']);
+	$price = $mysqli->real_escape_string($_POST['price']);	
 	
 	// checking empty fields
 	if(empty($name) || empty($qty) || empty($price)) {
@@ -41,61 +41,20 @@ if(isset($_POST['id']) && isset($_POST['name']) && isset($_POST['qty']) && isset
 }
 
 //getting id from url
-$id = $_GET['id'];
+
+$id = $mysqli->real_scape_string($_GET['id']);
 
 //selecting data associated with this particular id
 $result = $mysqli->query("SELECT * FROM products WHERE id=$id");
 
+$product = array();
 while($row = $result->fetch_array())
 {
-	$name = $row['name'];
-	$qty = $row['qty'];
-	$price = $row['price'];
+	$product['name'] = $row['name'];
+	$product['qty'] = $row['qty'];
+	$product['price'] = $row['price'];
 }
+include_once("views/edit.php");
+
+include_once("views/footer.php");
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">	
-	<title>Edit Data</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"  crossorigin="anonymous">
-</head>
-
-<body>
-	<div class = "container">
-		<div class="jumbotron">
-			<h1 class="display-4">Simple LAMP web app</h1>
-			<p class="lead">Demo app</p>
-		</div>
-			
-
-	<a href="index.php">Home</a> | <a href="view.php">View Products</a> | <a href="logout.php">Logout</a>
-	<br/><br/>
-	
-	<form action="edit.php" method="post">
-
-		<div class="form-group">
-			<label for="name">Name</label>
-			<input type="text" class="form-control" name="name" value="<?php echo $name;?>">
-		</div>
-
-		<div class="form-group">
-			<label for="qty">Quantity</label>
-			<input type="number" class="form-control" name="qty" value="<?php echo $qty;?>">
-		</div>
-
-		<div class="form-group">
-			<label for="price">Price</label>
-			<input type="number" class="form-control" name="price" value="<?php echo $price;?>">
-		</div>
-
-
-		<input type="hidden" name="id" value=<?php echo $_GET['id'];?>>
-		
-		<div class="form-group">
-			<input type="submit" value="Update" class="form-control" >
-		</div>
-	</form>
-</div>
-</body>
-</html>
