@@ -4,25 +4,9 @@
 if(!isset($_SESSION['logged'])) {
 	header('Location: login.php');
 }
-?>
 
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">	
-	<title>Add Data</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"  crossorigin="anonymous">
-</head>
+include_once("views/header.php")
 
-<body>
-<div class = "container">
-		<div class="jumbotron">
-			<h1 class="display-4">Simple LAMP web app</h1>
-			<p class="lead">Demo app</p>
-		</div>
-			
-
-<?php
 //including the database connection file
 include_once("config.php");
 
@@ -60,8 +44,5 @@ if(isset($_POST['name']) && isset($_POST['qty']) && isset($_POST['price'])) {
 		echo "<br/><a href='view.php'>View Result</a>";
 	}
 }
+include_once("views/footer.php")
 ?>
-
-</div>
-</body>
-</html>
