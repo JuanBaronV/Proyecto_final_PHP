@@ -1,39 +1,28 @@
+<ul class="nav nav-tabs">
+	<li class="nav-item"><a href="index.php" class="nav-link" >Home</a></li>
+	<li class="nav-item "><a href="view.php" class="nav-link active">View</a></li>	
+	<li class="nav-item"><a href="add.php" class="nav-link" >Add</a></li>
+	<li class="nav-item"><a href="logout.php" class="nav-link" >Logout</a></li>
+</ul>
+<br/>
 
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>Homepage</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"  crossorigin="anonymous">	
-</head>
-
-<body>
-<div class = "container">
-	<div class="jumbotron">
-      <h1 class="display-4">Simple LAMP web app</h1>
-      <p class="lead">Demo app</p>
-    </div>	
-
-	<a href="index.php">Home</a> | <a href="add.html">Add New Data</a> | <a href="logout.php">Logout</a>
-	<br/><br/>
-
-	<table width='80%' border=0 class="table">
-		<tr bgcolor='#CCCCCC'>
-			<td>Name</td>
-			<td>Quantity</td>
-			<td>Price (euro)</td>
-			<td>Update</td>
+<table class="table table-striped table-bordered table-hover align-middle">
+	<thead class="table-dark">
+		<tr>
+			<th>Name</th>
+			<th>Quantity</th>
+			<th>Price (euro)</th>
+			<th>Update</th>
 		</tr>
-		<?php foreach($products as $product): ?>
-        <tr>
-			<td><?php echo $product['name']; ?></td>
-            <td><?php echo $product['qty']; ?></td>
-            <td><?php echo $product['price']; ?></td>
-            <td><a href="edit.php?id=<?php echo $product ['id'];?>" class="btn btn-primary">Edit</a> |
-            <a href="delete.php?id=<?php echo $product ['id'];?>" class="btn btn-primary"
-            onClick="return confirm('Are you sure you want to delete?')">Delete</a></td>
-        </tr>
+	</thead>
+	<tbdody>
+		<?php foreach ($productos as $producto) : ?>
+			<tr>
+				<td><?php echo $producto['name'] ?></td>
+				<td><?php echo $producto['qty'] ?></td>
+				<td><?php echo $producto['price'] ?></td>
+				<td><a href="edit.php?id=<?php echo $producto['id'] ?>" class="btn btn-primary">Edit</a> <a href="delete.php?id=<?php echo $producto['id'] ?>" onClick="return confirm('Are you sure you want to delete?')" class="btn btn-primary" >Delete</a></td>
+			</tr>
 		<?php endforeach; ?>
-	</table>	
-</body>
-</html>
+	</tbdody>
+</table>

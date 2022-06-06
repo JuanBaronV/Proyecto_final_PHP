@@ -1,22 +1,24 @@
-<?php session_start(); ?>
+<?php 
+// Iniciamos la sesión
+session_start();
 
-<?php
+// Comprobamos si el usuario está logueado
 if(!isset($_SESSION['logged'])) {
 	header('Location: login.php');
 }
-?>
 
-<?php
-//including the database connection file
-include("config.php");
+// Incluimos el objeto de conexión con la bd
+include("config/config.php");
 
-//getting id of the data from url y sanearlo
+// Saneamos id del producto que recibimos del formulario
+$id = $mysqli->real_escape_string($_GET['id']);
 
-$id = $mysqli->real_escape_string ($_GET['id']);
+// Eliminamos el producto de la bd
+$result = $mysqli->query("DELETE FROM products WHERE id=$id");
 
-//deleting the row from table
-$result=$mysqli->query("DELETE FROM products WHERE id=$id");
+// Cerramos la conexión con la base de datos
+$mysqli->close();
 
-//redirecting to the display page (view.php in our case)
+// Redireccionamos a la página view.php
 header("Location:view.php");
 ?>

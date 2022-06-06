@@ -1,77 +1,45 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>Homepage</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"  crossorigin="anonymous">	
-</head>
-
-<body>
-<div class = "container">
-	<div class="jumbotron">
-      <h1 class="display-4">Simple LAMP web app</h1>
-      <p class="lead">Demo app</p>
-    </div>	
-
-	<p>
-		<a href="index.php" class="btn btn-primary">Home</a>
-	</p>
-
 <?php
-include("config.php");
+// Incluimos el objeto de conexión con la bd
+include("config/config.php");
 
-if(isset($_POST['name']) && isset($_POST['email']) && isset($_POST['username']) && isset($_POST['password'])) {
-	$name = $_POST['name'];
-	$email = $_POST['email'];
-	$user = $_POST['username'];
-	$pass = $_POST['password'];
+// Incluimos la cabecera
+include_once("views/header.php");
 
-	if($user == "" || $pass == "" || $name == "" || $email == "") {
-		echo "All fields should be filled. Either one or many fields are empty.";
-		echo "<br/>";
-		echo "<a href='register.php'>Go back</a>";
+// Si no recibimos nada por POST
+if(!empty($_POST)) {
+	// Si recibimos parámetros por POST los saneamos para evitar SQL injection
+	$name = $mysqli->real_escape_string($_POST['name']);
+	$email = $mysqli->real_escape_string($_POST['email']);
+	$name = $mysqli->real_escape_string($_POST['f_nacimiento']);
+	$name = $mysqli->real_escape_string($_POST['telefono']);
+	$username = $mysqli->real_escape_string($_POST['username']);
+	$password = $mysqli->real_escape_string($_POST['password']);
+
+	// Comparamos si los parámetros están vacíos
+	if(empty($name) || empty($email) || empty($f_nacimiento) || empty($telefono) || empty($username) || empty($password)) {
+		$status = "error";
+		$message = "All fields should be filled. Either one or many fields are empty.";
 	} else {
-		mysqli_query($mysqli, "INSERT INTO login (name, email, username, password) VALUES ('$name', '$email', '$user', md5('$pass'))")
-			or die("Could not execute the insert query.");
-			
-		echo "Registration successfully";
-		echo "<br/>";
-		echo "<a href='login.php'>Login</a>";
+		// Si no están vacíos los insertamos en la bd
+		$mysqli->query("INSERT INTO login (name, email, f_nacimiento, telefono, username, password) VALUES ('$name', '$email', '$f_nacimiento', '$telefono' '$username', md5('$password'))");
+
+		// Comprobamos si la inserción se realizó con éxito
+		if ($mysqli->errno == 0) {
+			$status = "success";
+			$message = "Registration successfully.";
+		} else {
+			$status = "error";
+			$message = "Error: $mysqli->error";
+		}
+
+		// Cerramos la conexión con la base de datos
+		$mysqli->close();
 	}
-} else {
-?>
-	<h3>Register</h3>
-	<form action="register.php" method="post">
-
-		<div class="form-group">
-			<label for="name">Full Name</label>
-			<input type="text" class="form-control" name="name">
-		</div>
-
-		<div class="form-group">
-			<label for="email">Email</label>
-			<input type="text" class="form-control" name="email">
-		</div>
-
-		<div class="form-group">
-			<label for="username">Username</label>
-			<input type="text" class="form-control" name="username">
-		</div>
-
-		<div class="form-group">
-			<label for="password">Password</label>
-			<input type="password" class="form-control" name="password">
-		</div>
-
-		<div class="form-group">
-			<input type="submit" value="Submit" class="form-control" >
-		</div>
-
-	</form>
-<?php
 }
-?>
 
-</div>
-</body>
-</html>
+// Incluimos la vista para registrar usuarios
+include_once("views/register.php");
+
+// Incluimos el pie de página
+include_once("views/footer.php");
+?>

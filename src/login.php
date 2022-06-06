@@ -1,81 +1,51 @@
-<?php session_start(); ?>
+<?php 
+// Iniciamos la sesión
+session_start();
 
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>Homepage</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"  crossorigin="anonymous">	
-</head>
+// Incluimos la cabecera
+include_once("views/header.php");
 
-<body>
-<div class = "container">
-	<div class="jumbotron">
-      <h1 class="display-4">Simple LAMP web app</h1>
-      <p class="lead">Demo app</p>
-    </div>	
+// Incluimos el objeto de conexión con la bd
+include("config/config.php");
 
-	<p>
-		<a href="index.php">Home</a>
-		<br/>
-	</p>
+if(!empty($_POST)) {
+	// Saneamos los parámetros que recibimos del formulario
+	$username = mysqli_real_escape_string($mysqli, $_POST['username']);
+	$password = mysqli_real_escape_string($mysqli, $_POST['password']);
 
-<?php
-include("config.php");
-
-if(isset($_POST['username']) && isset($_POST['password'])) {
-	$user = $mysqli->real_escape_string( $_POST['username']);
-	$pass = $mysqli->real_escape_string( $_POST['password']);
-
-	if($user == "" || $pass == "") {
-		echo "Either username or password field is empty.";
-		echo "<br/>";
-		echo "<a href='login.php'>Go back</a>";
+	// Comprobamos si los parámetros están vacíos
+	if(empty($username) || empty($password)) {
+		$status = "error";
+		$message = "Either username or password field is empty.";
 	} else {
-		$result = $mysqli->query("SELECT * FROM login WHERE username='$user' AND password=md5('$pass')")
-					or die("Could not execute the select query.");
+		// Si los parámetros no están vacíos los comparamos con los datos de la bd
+		$result = $mysqli->query("SELECT * FROM login WHERE username='$username' AND password=md5('$password')");
 		
+		// Obtenemos una fila
 		$row = $result->fetch_assoc();
+
+		// Cerramos la conexión con la base de datos
+		$mysqli->close();
 		
+		// Comparamos si la consulta ha tenido éxito
 		if(is_array($row) && !empty($row)) {
 			$_SESSION['logged'] = true;
 			$_SESSION['username'] = $row['username'];
 			$_SESSION['name'] = $row['name'];
-			$_SESSION['id'] = $row['id'];
-		} else {
-			echo "Invalid username or password.";
-			echo "<br/>";
-			echo "<a href='login.php'>Go back</a>";
-		}
+			$_SESSION['id_login'] = $row['id'];
 
-		if(isset($_SESSION['valid'])) {
-			header('Location: index.php');			
+			// Redireccionamos a la página principal
+			header('Location: index.php');
+		} else {
+			$status = "error";
+			$message = "Invalid username or password.";
 		}
 	}
-} else {
-?>
-
-	<h3>Login</h3>
-	<form action="login.php" method="post">
-
-		<div class="form-group">
-			<label for="username">Username</label>
-			<input type="text" class="form-control" name="username">
-		</div>
-
-		<div class="form-group">
-			<label for="password">Password</label>
-			<input type="password" class="form-control" name="password">
-		</div>
-
-		<div class="form-group">
-			<input type="submit" value="Submit" class="form-control" >
-		</div>
-	</form>
-<?php
 }
-?>
 
-</div>
-</body>
-</html>
+// Incluimos la vista del login
+include_once("views/login.php");
+
+// Incluimos el pie de página
+include_once("views/footer.php");
+?>
